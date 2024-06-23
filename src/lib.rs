@@ -17,6 +17,14 @@ struct Galaxy {
     x: usize,
     y: usize,
 }
+
+impl Galaxy {
+    /// Calculate the distance between two galaxies.
+    fn distance(&self, other_galaxy: &Galaxy) -> usize {
+        self.x.abs_diff(other_galaxy.x) + self.y.abs_diff(other_galaxy.y)
+    }
+}
+
 #[derive(PartialEq, Eq, Debug, Clone)]
 struct Universe {
     galaxies: Vec<Galaxy>,
@@ -41,31 +49,26 @@ impl Universe {
         Galaxy { x, y }
     }
 
-    /// Calculate the distance between two galaxies.
-    fn distance(galaxy1: &Galaxy, galaxy2: &Galaxy) -> usize {
-        galaxy1.x.abs_diff(galaxy2.x) + galaxy1.y.abs_diff(galaxy2.y)
-    }
-
-    /// Calculate the sum of all distances between each pair of galaxies.
-    fn all_distances(galaxies: &[Galaxy]) -> usize {
-        let mut distance_sum = 0;
-        for (index, galaxy) in galaxies.iter().enumerate() {
-            distance_sum += galaxies[index..]
-                .iter()
-                .fold(0, |acc, s| acc + Self::distance(galaxy, s))
-        }
-        distance_sum
-    }
-
     /// Calculate the sum of all distances between each pair of galaxies
     /// in the expanded universe.
     fn all_distances_expanded(&self, factor: usize) -> usize {
+        // Expand the universe.
         let expanded_galaxies = self
             .galaxies
             .iter()
-            .map(|s| self.expand(s, factor))
+            .map(|galaxy: &Galaxy| self.expand(galaxy, factor))
             .collect::<Vec<_>>();
-        Self::all_distances(&expanded_galaxies)
+        // Calculate and sum over the distances of all galaxy pairs.
+        expanded_galaxies
+            .iter()
+            .enumerate()
+            .fold(0, |acc, (index, galaxy)| {
+                acc + expanded_galaxies[index..]
+                    .iter()
+                    .fold(0, |acc, other_galaxy| {
+                        acc + galaxy.distance(other_galaxy)
+                    })
+            })
     }
 
     /// Find and add galaxies from this line, update empty_columns
@@ -101,6 +104,7 @@ impl Universe {
                 u.empty_rows.insert(line_counter);
             }
         }
+
         u
     }
 }
@@ -141,37 +145,29 @@ mod tests {
             empty_rows: BTreeSet::from_iter(vec![3, 7].into_iter()),
         };
         assert_eq!(
-            Universe::distance(
-                &u.expand(&u.galaxies[4], 1),
-                &u.expand(&u.galaxies[8], 1)
-            ),
+            u.expand(&u.galaxies[4], 1)
+                .distance(&u.expand(&u.galaxies[8], 1)),
             9
         );
         assert_eq!(
-            Universe::distance(
-                &u.expand(&u.galaxies[0], 1),
-                &u.expand(&u.galaxies[6], 1)
-            ),
+            u.expand(&u.galaxies[0], 1)
+                .distance(&u.expand(&u.galaxies[6], 1)),
             15
         );
         assert_eq!(
-            Universe::distance(
-                &u.expand(&u.galaxies[2], 1),
-                &u.expand(&u.galaxies[5], 1)
-            ),
+            u.expand(&u.galaxies[2], 1)
+                .distance(&u.expand(&u.galaxies[5], 1)),
             17
         );
         assert_eq!(
-            Universe::distance(
-                &u.expand(&u.galaxies[7], 1),
-                &u.expand(&u.galaxies[8], 1)
-            ),
+            u.expand(&u.galaxies[7], 1)
+                .distance(&u.expand(&u.galaxies[8], 1)),
             5
         );
     }
 
     #[test]
-    fn test_all_distances() {
+    fn test_all_distances_expanded() {
         let u = Universe {
             galaxies: vec![
                 Galaxy { x: 3, y: 0 },
@@ -187,12 +183,7 @@ mod tests {
             empty_columns: BTreeSet::from_iter(vec![2, 5, 8].into_iter()),
             empty_rows: BTreeSet::from_iter(vec![3, 7].into_iter()),
         };
-        let expanded_galaxies = u
-            .galaxies
-            .iter()
-            .map(|s| u.expand(s, 1))
-            .collect::<Vec<_>>();
-        let result = Universe::all_distances(&expanded_galaxies);
+        let result = u.all_distances_expanded(1);
         assert_eq!(result, 374)
     }
 
