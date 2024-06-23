@@ -64,13 +64,12 @@ impl Universe {
         expanded_galaxies
             .iter()
             .enumerate()
-            .fold(0, |acc, (index, galaxy)| {
-                acc + expanded_galaxies[index..]
+            .flat_map(|(index, galaxy)| {
+                expanded_galaxies[index..]
                     .iter()
-                    .fold(0, |acc, other_galaxy| {
-                        acc + galaxy.distance(other_galaxy)
-                    })
+                    .map(|other_galaxy| galaxy.distance(other_galaxy))
             })
+            .sum()
     }
 
     /// Find and add galaxies from this line, update empty_columns
