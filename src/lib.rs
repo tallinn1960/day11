@@ -96,7 +96,7 @@ impl Universe {
     fn big_bang(the_word: &str, extra_space: usize) -> Self {
         let mut input = the_word.split('\n');
         let first_line =
-            input.next().unwrap_or_else(|| panic!("Can't create the universe without the word!"));
+            input.next().unwrap_or_else(|| panic!("Can't create the universe without the Word!"));
         let mut line_counter = 0;
         let mut universe = Universe {
             galaxies: vec![],
