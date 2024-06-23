@@ -2,13 +2,13 @@ use std::collections::BTreeSet;
 
 #[allow(unused_variables)]
 pub fn p1(input: &str) -> u64 {
-    let universe = Universe::parse(input);
+    let universe = Universe::big_bang(input);
     universe.all_distances_expanded(1) as u64
 }
 
 #[allow(unused_variables)]
 pub fn p2(input: &str) -> u64 {
-    let universe = Universe::parse(input);
+    let universe = Universe::big_bang(input);
     universe.all_distances_expanded(999_999) as u64
 }
 
@@ -81,7 +81,7 @@ impl Universe {
     }
 
     /// Create the Universe.
-    fn parse(input: &str) -> Self {
+    fn big_bang(input: &str) -> Self {
         let mut input = input.split('\n');
         let first_line =
             input.next().unwrap_or_else(|| panic!("No universe given"));
@@ -217,7 +217,7 @@ mod tests {
     }
 
     #[test]
-    fn test_parse() {
+    fn test_big_bang() {
         let input = "...#......
 .......#..
 #.........
@@ -228,7 +228,7 @@ mod tests {
 ..........
 .......#..
 #...#.....";
-        let result = Universe::parse(input);
+        let result = Universe::big_bang(input);
         let u = Universe {
             galaxies: vec![
                 Galaxy { x: 3, y: 0 },
@@ -277,7 +277,7 @@ mod tests {
 .......#..
 #...#.....";
 
-        let universe = Universe::parse(input);
+        let universe = Universe::big_bang(input);
         let result = universe.all_distances_expanded(99) as u64;
         assert_eq!(result, 8410)
     }
