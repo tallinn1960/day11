@@ -1,4 +1,6 @@
-use std::collections::BTreeSet;
+pub mod uncle_scientist;
+
+use std::collections::HashSet;
 
 #[allow(unused_variables)]
 pub fn p1(input: &str) -> u64 {
@@ -28,8 +30,8 @@ impl Galaxy {
 #[derive(PartialEq, Eq, Debug, Clone)]
 struct Universe {
     galaxies: Vec<Galaxy>,
-    empty_columns: BTreeSet<usize>,
-    empty_rows: BTreeSet<usize>,
+    empty_columns: HashSet<usize>,
+    empty_rows: HashSet<usize>,
 }
 
 impl Universe {
@@ -91,8 +93,8 @@ impl Universe {
         let mut line_counter = 0;
         let mut u = Universe {
             galaxies: vec![],
-            empty_columns: BTreeSet::from_iter(0..first_line.len()),
-            empty_rows: BTreeSet::new(),
+            empty_columns: HashSet::from_iter(0..first_line.len()),
+            empty_rows: HashSet::new(),
         };
         if !u.find_galaxies_in_line(first_line, line_counter) {
             // this row is empty
@@ -119,8 +121,8 @@ mod tests {
     fn test_expand() {
         let u = Universe {
             galaxies: vec![],
-            empty_columns: BTreeSet::from_iter(vec![2, 5, 8].into_iter()),
-            empty_rows: BTreeSet::from_iter(vec![3, 7].into_iter()),
+            empty_columns: HashSet::from_iter(vec![2, 5, 8].into_iter()),
+            empty_rows: HashSet::from_iter(vec![3, 7].into_iter()),
         };
         let galaxy = Galaxy { x: 3, y: 0 };
         let expanded_galaxy = u.expand(&galaxy, 1);
@@ -141,8 +143,8 @@ mod tests {
                 Galaxy { x: 0, y: 9 },
                 Galaxy { x: 4, y: 9 },
             ],
-            empty_columns: BTreeSet::from_iter(vec![2, 5, 8].into_iter()),
-            empty_rows: BTreeSet::from_iter(vec![3, 7].into_iter()),
+            empty_columns: HashSet::from_iter(vec![2, 5, 8].into_iter()),
+            empty_rows: HashSet::from_iter(vec![3, 7].into_iter()),
         };
         assert_eq!(
             u.expand(&u.galaxies[4], 1)
@@ -180,8 +182,8 @@ mod tests {
                 Galaxy { x: 0, y: 9 },
                 Galaxy { x: 4, y: 9 },
             ],
-            empty_columns: BTreeSet::from_iter(vec![2, 5, 8].into_iter()),
-            empty_rows: BTreeSet::from_iter(vec![3, 7].into_iter()),
+            empty_columns: HashSet::from_iter(vec![2, 5, 8].into_iter()),
+            empty_rows: HashSet::from_iter(vec![3, 7].into_iter()),
         };
         let result = u.all_distances_expanded(1);
         assert_eq!(result, 374)
@@ -191,8 +193,8 @@ mod tests {
     fn test_find_galaxies_in_line() {
         let mut u = Universe {
             galaxies: vec![],
-            empty_columns: BTreeSet::from_iter(0..10),
-            empty_rows: BTreeSet::from_iter(0..10),
+            empty_columns: HashSet::from_iter(0..10),
+            empty_rows: HashSet::from_iter(0..10),
         };
 
         let result = u.find_galaxies_in_line("#...#.....", 9);
@@ -203,7 +205,7 @@ mod tests {
         );
         assert_eq!(
             u.empty_columns,
-            BTreeSet::from_iter(vec![1, 2, 3, 5, 6, 7, 8, 9].into_iter())
+            HashSet::from_iter(vec![1, 2, 3, 5, 6, 7, 8, 9].into_iter())
         )
     }
 
@@ -232,8 +234,8 @@ mod tests {
                 Galaxy { x: 0, y: 9 },
                 Galaxy { x: 4, y: 9 },
             ],
-            empty_columns: BTreeSet::from_iter(vec![2, 5, 8].into_iter()),
-            empty_rows: BTreeSet::from_iter(vec![3, 7].into_iter()),
+            empty_columns: HashSet::from_iter(vec![2, 5, 8].into_iter()),
+            empty_rows: HashSet::from_iter(vec![3, 7].into_iter()),
         };
         assert_eq!(result, u);
     }
