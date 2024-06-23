@@ -35,14 +35,6 @@ impl Universe {
         }
     }
 
-    fn part1(&mut self) -> u64 {
-        self.sum_distances(2)
-    }
-
-    fn part2(&mut self) -> u64 {
-        self.sum_distances(1_000_000)
-    }
-
     fn sum_distances(&mut self, scale: usize) -> u64 {
         let scale = scale - 1;
         self.galaxies
@@ -67,6 +59,15 @@ impl Universe {
             })
             .sum::<usize>() as u64
     }
+
+    fn part1(&mut self) -> u64 {
+        self.sum_distances(2)
+    }
+
+    fn part2(&mut self) -> u64 {
+        self.sum_distances(1_000_000)
+    }
+
 }
 
 pub fn p1(input: &str) -> u64 {

@@ -2,16 +2,14 @@ pub mod uncle_scientist;
 
 use std::collections::HashSet;
 
-#[allow(unused_variables)]
 pub fn p1(input: &str) -> u64 {
     let universe = Universe::big_bang(input, 1);
-    universe.all_distances_expanded() as u64
+    universe.sum_of_all_distances_after_expansion() as u64
 }
 
-#[allow(unused_variables)]
 pub fn p2(input: &str) -> u64 {
     let universe = Universe::big_bang(input, 999_999);
-    universe.all_distances_expanded() as u64
+    universe.sum_of_all_distances_after_expansion() as u64
 }
 
 #[derive(PartialEq, Eq, Debug, Clone, Copy)]
@@ -36,9 +34,9 @@ struct Universe {
 }
 
 impl Universe {
-    /// Calculate the position of a galaxy in the expanded universe.
-    /// The factor is the space added for every empty column and/or row.
-    fn expand(&self, galaxy: &Galaxy) -> Galaxy {
+    /// Calculate the new position of a galaxy in the expanded universe.
+    /// Returns the galaxy with its new position.
+    fn move_by_expansion(&self, galaxy: &Galaxy) -> Galaxy {
         let x = self
             .empty_columns
             .iter()
@@ -52,15 +50,14 @@ impl Universe {
         Galaxy { x, y }
     }
 
-    /// Calculate the sum of all distances between each pair of galaxies
-    /// in the expanded universe. extra_space is the space to add for each
-    /// emtpy row or column.
-    fn all_distances_expanded(&self) -> usize {
+    /// Calculate the sum of the distances between each pair of galaxies
+    /// in the expanded universe.
+    fn sum_of_all_distances_after_expansion(&self) -> usize {
         // Expand the universe.
         let expanded_galaxies = self
             .galaxies
             .iter()
-            .map(|galaxy: &Galaxy| self.expand(galaxy))
+            .map(|galaxy: &Galaxy| self.move_by_expansion(galaxy))
             .collect::<Vec<_>>();
         // Calculate and sum over the distances of all galaxy pairs.
         expanded_galaxies
@@ -74,7 +71,7 @@ impl Universe {
             .sum()
     }
 
-    /// Find and add galaxies from this line, update empty_columns
+    /// Find and add galaxies from this line, update empty_columns,
     /// return true if the line had any galaxies in it.
     fn find_galaxies_in_line(&mut self, line: &str, y: usize) -> bool {
         let mut positions = line
@@ -89,30 +86,35 @@ impl Universe {
         found
     }
 
-    /// Create the Universe.
-    fn big_bang(input: &str, extra_space: usize) -> Self {
-        let mut input = input.split('\n');
+    /// Create the Universe. It all started with a Big Bang.
+    /// 
+    /// the_word: In the beginning was the Word, and the Word was with God, and the Word was God. 
+    /// He was with God in the beginning. Through Him all things were made, and without 
+    /// Him nothing was made that has been made.
+    /// 
+    /// extra_space: the mess we have today.
+    fn big_bang(the_word: &str, extra_space: usize) -> Self {
+        let mut input = the_word.split('\n');
         let first_line =
-            input.next().unwrap_or_else(|| panic!("No universe given"));
+            input.next().unwrap_or_else(|| panic!("Can't create the universe without the word!"));
         let mut line_counter = 0;
-        let mut u = Universe {
+        let mut universe = Universe {
             galaxies: vec![],
             empty_columns: HashSet::from_iter(0..first_line.len()),
             empty_rows: HashSet::new(),
             extra_space,
         };
-        if !u.find_galaxies_in_line(first_line, line_counter) {
+        if !universe.find_galaxies_in_line(first_line, line_counter) {
             // this row is empty
-            u.empty_rows.insert(line_counter);
+            universe.empty_rows.insert(line_counter);
         }
         for line in input {
             line_counter += 1;
-            if !u.find_galaxies_in_line(line, line_counter) {
-                u.empty_rows.insert(line_counter);
+            if !universe.find_galaxies_in_line(line, line_counter) {
+                universe.empty_rows.insert(line_counter);
             }
         }
-
-        u
+        universe // There you have it. Use it wisely.
     }
 }
 
@@ -131,7 +133,7 @@ mod tests {
             extra_space: 1,
         };
         let galaxy = Galaxy { x: 3, y: 0 };
-        let expanded_galaxy = u.expand(&galaxy);
+        let expanded_galaxy = u.move_by_expansion(&galaxy);
         assert_eq!(expanded_galaxy, Galaxy { x: 4, y: 0 });
     }
 
@@ -154,19 +156,23 @@ mod tests {
             extra_space: 1,
         };
         assert_eq!(
-            u.expand(&u.galaxies[4]).distance(&u.expand(&u.galaxies[8])),
+            u.move_by_expansion(&u.galaxies[4])
+                .distance(&u.move_by_expansion(&u.galaxies[8])),
             9
         );
         assert_eq!(
-            u.expand(&u.galaxies[0]).distance(&u.expand(&u.galaxies[6])),
+            u.move_by_expansion(&u.galaxies[0])
+                .distance(&u.move_by_expansion(&u.galaxies[6])),
             15
         );
         assert_eq!(
-            u.expand(&u.galaxies[2]).distance(&u.expand(&u.galaxies[5])),
+            u.move_by_expansion(&u.galaxies[2])
+                .distance(&u.move_by_expansion(&u.galaxies[5])),
             17
         );
         assert_eq!(
-            u.expand(&u.galaxies[7]).distance(&u.expand(&u.galaxies[8])),
+            u.move_by_expansion(&u.galaxies[7])
+                .distance(&u.move_by_expansion(&u.galaxies[8])),
             5
         );
     }
@@ -189,7 +195,7 @@ mod tests {
             empty_rows: HashSet::from_iter(vec![3, 7].into_iter()),
             extra_space: 1,
         };
-        let result = u.all_distances_expanded();
+        let result = u.sum_of_all_distances_after_expansion();
         assert_eq!(result, 374)
     }
 
@@ -277,7 +283,7 @@ mod tests {
 #...#.....";
 
         let universe = Universe::big_bang(input, 99);
-        let result = universe.all_distances_expanded() as u64;
+        let result = universe.sum_of_all_distances_after_expansion() as u64;
         assert_eq!(result, 8410)
     }
 
