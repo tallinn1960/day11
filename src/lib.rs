@@ -80,6 +80,9 @@ impl Universe {
             self.empty_columns.remove(&x);
             Galaxy { x, y }
         });
+        // It's stupid that match_indices gives no indication
+        // on whether a match was found at all. So we need
+        // this hack to see if we found something.
         let previous_galaxy_count = self.galaxies.len();
         self.galaxies.extend(&mut positions);
         self.galaxies.len() > previous_galaxy_count
