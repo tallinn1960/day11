@@ -79,10 +79,10 @@ impl Universe {
     fn find_galaxies_in_line(&mut self, line: &str, y: usize) -> bool {
         let mut positions = line
             .match_indices('#')
-            .map(|(x, _)| {
-                self.empty_columns.remove(&x);
-                Galaxy { x, y }
+            .inspect(|(x, _)| {
+                self.empty_columns.remove(x);
             })
+            .map(|(x, _)| Galaxy { x, y })
             .peekable();
         let found = positions.peek().is_some();
         self.galaxies.extend(&mut positions);
