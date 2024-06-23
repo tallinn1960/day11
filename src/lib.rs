@@ -67,11 +67,10 @@ impl Universe {
             .map(|(x, _)| {
                 self.empty_columns.remove(&x);
                 Star { x, y }
-            })
-            .collect::<Vec<_>>();
-        let found = !positions.is_empty();
-        self.stars.append(&mut positions);
-        found
+            });
+        let stars_before  = self.stars.len();
+        self.stars.extend(&mut positions);
+        self.stars.len() > stars_before
     }
 
     /// Create the Universe.
@@ -100,6 +99,8 @@ impl Universe {
 
 #[cfg(test)]
 mod tests {
+    use std::{fs::File, io::Read};
+
     use super::*;
 
     #[test]
@@ -267,4 +268,23 @@ mod tests {
             universe.all_distances_expanded(99) as u64;
         assert_eq!(result, 8410)
     }
+
+    #[test]
+    fn test_part1() {
+        let mut f = File::open("input.txt").expect("Can't open input file!");
+        let mut buf = String::new();
+        f.read_to_string(&mut buf).expect("can't read file");
+        let result = p1(&buf);
+        assert_eq!(result, 9509330)
+    }
+
+    #[test]
+    fn test_part2() {
+        let mut f = File::open("input.txt").expect("Can't open input file!");
+        let mut buf = String::new();
+        f.read_to_string(&mut buf).expect("can't read file");
+        let result = p2(&buf);
+        assert_eq!(result, 635832237682)
+    }
+
 }
