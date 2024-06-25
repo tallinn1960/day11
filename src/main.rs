@@ -3,7 +3,7 @@ use std::{
     io::Read,
 };
 
-use day11::{p1, p2};
+use day11::{p1, p2, swift};
 
 
 
@@ -14,6 +14,8 @@ fn main() {
     let result = p1(&buf);
     println!("{result}");
     let result = p2(&buf);
+    println!("{result}");
+    let result = swift::part1_swift( buf.as_mut_str());
     println!("{result}");
 }
 

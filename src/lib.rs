@@ -1,4 +1,5 @@
 pub mod uncle_scientist;
+pub mod swift;
 
 use std::collections::HashSet;
 
