@@ -10,8 +10,12 @@ criterion = "0.5.1"
 divan = "0.1.14"
 
 [build-dependencies]
-bindgen = "0.69.4"
-cmake = "0.1.45"
+bindgen = {version = "0.69.4", optional = true}
+cmake = {version = "0.1.45", optional = true}
+
+[features]
+default = []
+Swift = ["bindgen", "cmake"]
 
 [[bench]]
 name = "criterion"

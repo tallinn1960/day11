@@ -6,3 +6,7 @@ include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 pub fn part1_swift( input: &mut str) -> u64 {
     unsafe { part1_swift_ffi(input.as_mut_ptr(), input.len()as u64) }
 }
+
+pub fn part2_swift( input: &mut str) -> u64 {
+    unsafe { part2_swift_ffi(input.as_mut_ptr(), input.len()as u64) }
+}

@@ -15,9 +15,11 @@ fn main() {
     println!("{result}");
     let result = p2(&buf);
     println!("{result}");
-    #[cfg(target_feature = "Swift")] {
-        let result = swift::part1_swift( buf.as_mut_str());
+    #[cfg(feature = "Swift")] {
+        let result = day11::swift::part1_swift( buf.as_mut_str());
         println!("{result}");
+        let result = day11::swift::part2_swift(buf.as_mut_str());
+        println!("{result}")
     }
 }
 

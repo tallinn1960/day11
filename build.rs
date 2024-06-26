@@ -1,6 +1,6 @@
 #![allow(missing_docs)]
 
-#[cfg(target_feature = "Swift")]
+#[cfg(feature = "Swift")]
 fn main() {
     use cmake::Config;
     use std::env;
@@ -31,7 +31,8 @@ fn main() {
     bindings
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
+    println!("cargo:rerun-if-changed=Swift/Sources/Day11/Day11.swift")
 }
 
-#[cfg(not(target_feature = "Swift"))]
+#[cfg(not(feature = "Swift"))]
 fn main() {}
