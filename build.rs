@@ -1,9 +1,10 @@
 #![allow(missing_docs)]
-use cmake::Config;
-use std::env;
-use std::path::PathBuf;
 
+#[cfg(target_feature = "Swift")]
 fn main() {
+    use cmake::Config;
+    use std::env;
+    use std::path::PathBuf;
     let dst = Config::new(".")
         .define("CMAKE_EXPORT_COMPILE_COMMANDS", "YES")
         .generator("Ninja Multi-Config")
@@ -31,3 +32,6 @@ fn main() {
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
 }
+
+#[cfg(not(target_feature = "Swift"))]
+fn main() {}

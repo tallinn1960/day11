@@ -1,4 +1,5 @@
 pub mod uncle_scientist;
+#[cfg(target_feature = "Swift")]
 pub mod swift;
 
 use std::collections::HashSet;

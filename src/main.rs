@@ -3,7 +3,7 @@ use std::{
     io::Read,
 };
 
-use day11::{p1, p2, swift};
+use day11::{p1, p2};
 
 
 
@@ -15,7 +15,9 @@ fn main() {
     println!("{result}");
     let result = p2(&buf);
     println!("{result}");
-    let result = swift::part1_swift( buf.as_mut_str());
-    println!("{result}");
+    #[cfg(target_feature = "Swift")] {
+        let result = swift::part1_swift( buf.as_mut_str());
+        println!("{result}");
+    }
 }
 
