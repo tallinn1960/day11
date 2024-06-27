@@ -2,7 +2,7 @@ import XCTest
 
 @testable import Day11
 
-extension Galaxy: Equatable {
+extension Galaxy: @retroactive Equatable {
   public static func == (lhs: Galaxy, rhs: Galaxy) -> Bool {
     return lhs.x == rhs.x && lhs.y == rhs.y
   }
@@ -24,9 +24,13 @@ final class Day11Tests: XCTestCase {
       """.data(using: .utf8)!
     let universe = Universe(data: data)
     XCTAssertEqual(universe.galaxies.count, 9)
-    XCTAssertEqual(universe.empty_columns, [2, 5, 8])
-    XCTAssertEqual(universe.empty_rows, [3, 7])
-    XCTAssertEqual(universe.galaxies, [
+    XCTAssertEqual(
+      universe.emptyColumns, [false, false, true, false, false, true, false, false, true, false])
+    XCTAssertEqual(
+      universe.emptyRows, [false, false, false, true, false, false, false, true, false, false])
+    XCTAssertEqual(
+      universe.galaxies,
+      [
       Galaxy(x: 3, y: 0),
       Galaxy(x: 7, y: 1),
       Galaxy(x: 0, y: 2),
