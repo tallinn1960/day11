@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
+#include <cstdint>
 #include <numeric>
 #include <set>
 #include <span>
@@ -14,7 +15,7 @@ struct Galaxy {
     Galaxy(size_t x, size_t y) : x(x), y(y) {}
 
     size_t distance(const Galaxy &other) const {
-        return abs((long)x - (long)other.x) + abs((long)y - (long)other.y);
+        return std::abs((long)x - (long)other.x) + std::abs((long)y - (long)other.y);
     }
 };
 
