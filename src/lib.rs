@@ -1,7 +1,4 @@
 pub mod uncle_scientist;
-#[cfg(feature = "Swift")]
-pub mod swift;
-
 use std::collections::HashSet;
 
 pub fn p1(input: &str) -> u64 {

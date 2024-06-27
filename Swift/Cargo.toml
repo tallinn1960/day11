@@ -1,0 +1,10 @@
+[package]
+name = "day11_swift"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[build-dependencies]
+bindgen = {version = "0.69.4"}
+cmake = {version = "0.1.45"}

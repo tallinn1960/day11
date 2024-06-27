@@ -241,10 +241,26 @@ checksum = "7a81dae078cea95a014a339291cec439d2f232ebe854a9d672b796c6afafa9b7"
 name = "day11"
 version = "0.1.0"
 dependencies = [
+ "criterion",
+ "day11_cpp",
+ "day11_swift",
+ "divan",
+]
+
+[[package]]
+name = "day11_cpp"
+version = "0.1.0"
+dependencies = [
+ "cmake",
+ "link-cplusplus",
+]
+
+[[package]]
+name = "day11_swift"
+version = "0.1.0"
+dependencies = [
  "bindgen",
  "cmake",
- "criterion",
- "divan",
 ]
 
 [[package]]
@@ -380,6 +396,15 @@ checksum = "e310b3a6b5907f99202fcdb4960ff45b93735d7c7d96b760fcff8db2dc0e103d"
 dependencies = [
  "cfg-if",
  "windows-targets 0.52.5",
+]
+
+[[package]]
+name = "link-cplusplus"
+version = "1.0.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d240c6f7e1ba3a28b0249f774e6a9dd0175054b52dfbb61b16eb8505c3785c9"
+dependencies = [
+ "cc",
 ]
 
 [[package]]

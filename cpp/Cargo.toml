@@ -1,0 +1,9 @@
+[package]
+name = "day11_cpp"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+link-cplusplus = { version = "1.0.9" }
+[build-dependencies]
+cmake = {version = "0.1.45"}

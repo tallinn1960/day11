@@ -19,7 +19,7 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/day11.h
 )
 # this is for c++ code to depend on the swift header
 add_custom_target(trap_swift_header DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/day11.h)
-add_library(day11Swift STATIC Swift/Sources/Day11/Day11.swift)
+add_library(day11Swift STATIC Sources/Day11/Day11.swift)
 target_compile_options(day11Swift PRIVATE "SHELL:-cxx-interoperability-mode=default -emit-objc-header-path ${CMAKE_CURRENT_BINARY_DIR}/day11.h -module-name day11")
 target_include_directories(day11Swift PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 # this is for rust to find the swift library

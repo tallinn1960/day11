@@ -4,18 +4,16 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+day11_swift = { path = "Swift", optional = true}
+day11_cpp = { path = "cpp", optional = false}
 
 [dev-dependencies]
 criterion = "0.5.1"
 divan = "0.1.14"
 
-[build-dependencies]
-bindgen = {version = "0.69.4", optional = true}
-cmake = {version = "0.1.45", optional = true}
-
 [features]
 default = []
-Swift = ["bindgen", "cmake"]
+Swift = ["day11_swift"]
 
 [[bench]]
 name = "criterion"

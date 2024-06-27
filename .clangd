@@ -1,0 +1,2 @@
+CompileFlags:                     # Tweak the parse settings
+  Add: [-std=c++2b]             # treat all files as C++, enable more warnings

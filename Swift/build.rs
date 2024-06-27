@@ -1,6 +1,3 @@
-#![allow(missing_docs)]
-
-#[cfg(feature = "Swift")]
 fn main() {
     use cmake::Config;
     use std::env;
@@ -11,6 +8,7 @@ fn main() {
         .build();
     println!("cargo:rustc-link-search=native={}", dst.display());
     println!("cargo:rustc-link-lib=static=day11Swift");
+
     // The bindgen::Builder is the main entry point
     // to bindgen, and lets you build up options for
     // the resulting bindings.
@@ -31,8 +29,6 @@ fn main() {
     bindings
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
-    println!("cargo:rerun-if-changed=Swift/Sources/Day11/Day11.swift")
+    println!("cargo:rerun-if-changed=Sources/Day11/Day11.swift");
 }
 
-#[cfg(not(feature = "Swift"))]
-fn main() {}
