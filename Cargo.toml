@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 day11_swift = { path = "Swift", optional = true}
-day11_cpp = { path = "cpp", optional = false}
+day11_cpp = { path = "cpp" }
 
 [dev-dependencies]
 criterion = "0.5.1"
