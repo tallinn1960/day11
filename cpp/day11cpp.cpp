@@ -1,8 +1,8 @@
 #include <algorithm>
 #include <cstddef>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
-#include <cstdint>
 #include <iterator>
 #include <numeric>
 #include <set>
@@ -16,7 +16,8 @@ struct Galaxy {
     Galaxy(size_t x, size_t y) : x(x), y(y) {}
 
     size_t distance(const Galaxy &other) const {
-        return std::abs((long)x - (long)other.x) + std::abs((long)y - (long)other.y);
+        return std::abs((long)x - (long)other.x) +
+               std::abs((long)y - (long)other.y);
     }
 };
 
@@ -26,25 +27,22 @@ struct Universe {
     const std::set<size_t> empty_rows;
     size_t extra_space;
 
-    Universe(const std::vector<Galaxy> galaxies, const std::set<size_t> empty_columns,
+    Universe(const std::vector<Galaxy> galaxies,
+             const std::set<size_t> empty_columns,
              const std::set<size_t> empty_rows, const size_t extra_space)
         : galaxies(galaxies), empty_columns(empty_columns),
           empty_rows(empty_rows), extra_space(extra_space) {}
 
     Galaxy move_by_expansion(const Galaxy &galaxy) const {
         size_t x = count_if(empty_columns.begin(), empty_columns.end(),
-        [&](size_t column) {
-            return column < galaxy.x;
-        }) *
-        extra_space +
-        galaxy.x;
-        ;
+                            [&](size_t column) { return column < galaxy.x; }) *
+                       extra_space +
+                   galaxy.x;
+
         size_t y = count_if(empty_rows.begin(), empty_rows.end(),
-        [&](size_t row) {
-            return row < galaxy.y;
-        }) *
-        extra_space +
-        galaxy.y;
+                            [&](size_t row) { return row < galaxy.y; }) *
+                       extra_space +
+                   galaxy.y;
         return Galaxy(x, y);
     }
 
@@ -55,9 +53,9 @@ struct Universe {
         }
         size_t sum = 0;
         for (auto first = expanded_galaxies.begin();
-                first != expanded_galaxies.end(); ++first) {
+             first != expanded_galaxies.end(); ++first) {
             for (auto second = first + 1; second != expanded_galaxies.end();
-                    ++second) {
+                 ++second) {
                 sum += first->distance(*second);
             }
         }
@@ -77,12 +75,12 @@ struct Universe {
         std::generate_n(std::inserter(empty_columns, empty_columns.begin()),
                         line_length, [n = 0]() mutable { return n++; });
         std::generate_n(std::inserter(empty_rows, empty_rows.begin()),
-                        data.size() / (line_length + 1), [n = 0]() mutable {
-                            return n++;
-                        });
+                        data.size() / (line_length + 1),
+                        [n = 0]() mutable { return n++; });
 
         auto start_offset = 0;
-        auto p = memchr(data.data() + start_offset, '#', data.size() - start_offset);
+        auto p =
+            memchr(data.data() + start_offset, '#', data.size() - start_offset);
         while (p != nullptr) {
             size_t offset = (const uint8_t *)p - data.data();
             size_t x = offset % (line_length + 1);
@@ -91,7 +89,8 @@ struct Universe {
             empty_columns.erase(x);
             empty_rows.erase(y);
             start_offset = offset + 1;
-            p = memchr(data.data() + start_offset, '#', data.size() - start_offset);
+            p = memchr(data.data() + start_offset, '#',
+                       data.size() - start_offset);
         }
 
         return Universe(galaxies, empty_columns, empty_rows, extra_space);
@@ -99,13 +98,13 @@ struct Universe {
 };
 
 extern "C" {
-    size_t part1_cpp(const uint8_t *input, size_t input_len) {
-        auto span = std::span(input, input_len);
-        return Universe::big_bang(span, 1).sum_of_all_distances_after_expansion();
-    }
-    size_t part2_cpp(const uint8_t *input, size_t input_len) {
-        auto span = std::span(input, input_len);
-        auto universe = Universe::big_bang(span, 999999);
-        return universe.sum_of_all_distances_after_expansion();
-    }
+size_t part1_cpp(const uint8_t *input, size_t input_len) {
+    auto span = std::span(input, input_len);
+    return Universe::big_bang(span, 1).sum_of_all_distances_after_expansion();
+}
+size_t part2_cpp(const uint8_t *input, size_t input_len) {
+    auto span = std::span(input, input_len);
+    auto universe = Universe::big_bang(span, 999999);
+    return universe.sum_of_all_distances_after_expansion();
+}
 }
