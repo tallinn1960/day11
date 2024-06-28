@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cstdint>
+#include <iterator>
 #include <numeric>
 #include <set>
 #include <span>
@@ -73,14 +74,12 @@ struct Universe {
         std::set<size_t> empty_columns;
         std::set<size_t> empty_rows = {};
 
-        // there are more elegant ways to do this in C++23,
-        // but most compilers do not support it yet
-        for (size_t i = 0; i < line_length; ++i) {
-            empty_columns.insert(i);
-        }
-        for (size_t i = 0; i < (data.size() / (line_length + 1)); ++i) {
-            empty_rows.insert(i);
-        }
+        std::generate_n(std::inserter(empty_columns, empty_columns.begin()),
+                        line_length, [n = 0]() mutable { return n++; });
+        std::generate_n(std::inserter(empty_rows, empty_rows.begin()),
+                        data.size() / (line_length + 1), [n = 0]() mutable {
+                            return n++;
+                        });
 
         auto start_offset = 0;
         auto p = memchr(data.data() + start_offset, '#', data.size() - start_offset);
@@ -102,8 +101,7 @@ struct Universe {
 extern "C" {
     size_t part1_cpp(const uint8_t *input, size_t input_len) {
         auto span = std::span(input, input_len);
-        auto universe = Universe::big_bang(span, 1);
-        return universe.sum_of_all_distances_after_expansion();
+        return Universe::big_bang(span, 1).sum_of_all_distances_after_expansion();
     }
     size_t part2_cpp(const uint8_t *input, size_t input_len) {
         auto span = std::span(input, input_len);
