@@ -9,7 +9,7 @@ public func part1FFI(dataBytes: UnsafeMutablePointer<UInt8>, _ count: UInt64) ->
 }
 
 @_cdecl("part2_swift_ffi")
-public func part21FFI(dataBytes: UnsafeMutablePointer<UInt8>, _ count: UInt64) -> UInt64 {
+public func part2FFI(dataBytes: UnsafeMutablePointer<UInt8>, _ count: UInt64) -> UInt64 {
     let data = Data(bytesNoCopy: dataBytes, count: Int(count), deallocator: .none)
     return part2(data) as UInt64
 }
