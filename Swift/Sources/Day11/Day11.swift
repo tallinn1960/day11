@@ -37,37 +37,33 @@ extension Galaxy {
 
 struct Universe {
     let galaxies: [Galaxy]
-    let emptyColumns: [Bool]
-    let emptyRows: [Bool]
+    let columnIsEmpty: [Bool]
+    let rowIsEmpty: [Bool]
     let extraSpace: Int
 }
 
 extension Universe {
     init(data: Data, extraSpace: Int = 1) {
-        let lines = data.split(separator: 10)
+        let lines = data.split(separator: UInt8(ascii: "\n"))
         var galaxies: [Galaxy] = []
-        var emptyColumns = [Bool](repeating: true, count: lines.first!.count)
-        var emptyRows = [Bool](repeating: false, count: lines.count)
+        var columnIsEmpty = [Bool](repeating: true, count: lines.first!.count)
+        var rowIsEmpty = [Bool](repeating: true, count: lines.count)
         for (y, line) in lines.enumerated() {
-            var noGalaxyInLine = true
             for (x, char) in line.enumerated() where char == UInt8(ascii: "#") {
                 galaxies.append(Galaxy(x: x, y: y))
-                emptyColumns[x] = false
-                noGalaxyInLine = false
-            }
-            if noGalaxyInLine {
-                emptyRows[y] = true
+                columnIsEmpty[x] = false
+                rowIsEmpty[y] = false
             }
         }
         self.galaxies = galaxies
-        self.emptyColumns = emptyColumns
-        self.emptyRows = emptyRows
+        self.columnIsEmpty = columnIsEmpty
+        self.rowIsEmpty = rowIsEmpty
         self.extraSpace = extraSpace
     }
 
     func move_by_expansion(galaxy: Galaxy) -> Galaxy {
-        let x = emptyColumns[..<galaxy.x].filter { $0 }.count * extraSpace + galaxy.x
-        let y = emptyRows[..<galaxy.y].filter { $0 }.count * extraSpace + galaxy.y
+        let x = columnIsEmpty[..<galaxy.x].count(where: { $0 }) * extraSpace + galaxy.x
+        let y = rowIsEmpty[..<galaxy.y].count(where: { $0 }) * extraSpace + galaxy.y
         return Galaxy(x: x, y: y)
     }
 

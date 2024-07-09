@@ -3,6 +3,7 @@ fn main() {
     use std::env;
     use std::path::PathBuf;
     let dst = Config::new(".")
+        .env("TOOLCHAINS", "Swift")
         .define("CMAKE_EXPORT_COMPILE_COMMANDS", "YES")
         .generator("Ninja Multi-Config")
         .build();

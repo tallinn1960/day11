@@ -25,9 +25,9 @@ final class Day11Tests: XCTestCase {
     let universe = Universe(data: data)
     XCTAssertEqual(universe.galaxies.count, 9)
     XCTAssertEqual(
-      universe.emptyColumns, [false, false, true, false, false, true, false, false, true, false])
+      universe.columnIsEmpty, [false, false, true, false, false, true, false, false, true, false])
     XCTAssertEqual(
-      universe.emptyRows, [false, false, false, true, false, false, false, true, false, false])
+      universe.rowIsEmpty, [false, false, false, true, false, false, false, true, false, false])
     XCTAssertEqual(
       universe.galaxies,
       [
